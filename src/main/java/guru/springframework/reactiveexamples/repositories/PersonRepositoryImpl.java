@@ -26,8 +26,8 @@ public class PersonRepositoryImpl implements PersonRepository {
      * or an empty {@link Mono} if no person with the given identifier exists.
      */
     @Override
-    public Mono<Person> getById(Integer id) {
-        return Mono.just(michael);
+    public Mono<Person> getById(final Integer id) {
+        return findAll().filter(person -> person.getId().equals(id)).next();
     }
 
     /**

@@ -7,9 +7,25 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class PersonRepositoryImplTest {
 
     PersonRepository personRepository = new PersonRepositoryImpl();
+
+    @Test
+    void testGetByIdFound() {
+        var personMono = personRepository.getById(3);
+
+        assertEquals(Boolean.TRUE, personMono.hasElement().block());
+    }
+
+    @Test
+    void testGetByIdNotFound() {
+        var personMono = personRepository.getById(10);
+
+        assertEquals(Boolean.FALSE, personMono.hasElement().block());
+    }
 
     @Test
     void testGetByIdBlock() {
