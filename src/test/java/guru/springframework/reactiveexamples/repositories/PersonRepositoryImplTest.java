@@ -3,6 +3,7 @@ package guru.springframework.reactiveexamples.repositories;
 import guru.springframework.reactiveexamples.domain.Person;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +22,32 @@ class PersonRepositoryImplTest {
     }
 
     @Test
+    void testGetByIdFoundStepVerifier() {
+        var personMono = personRepository.getById(3);
+
+        StepVerifier.create(personMono)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        personMono.subscribe(System.out::println);
+    }
+
+    @Test
     void testGetByIdNotFound() {
         var personMono = personRepository.getById(10);
 
         assertEquals(Boolean.FALSE, personMono.hasElement().block());
+    }
+
+    @Test
+    void testGetByIdNotFoundStepVerifier() {
+        var personMono = personRepository.getById(10);
+
+        StepVerifier.create(personMono)
+                .expectNextCount(0)
+                .verifyComplete();
+
+        personMono.subscribe(System.out::println);
     }
 
     @Test
