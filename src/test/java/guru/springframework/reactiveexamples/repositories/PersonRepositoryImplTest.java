@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Objects;
 
 class PersonRepositoryImplTest {
 
@@ -83,4 +84,22 @@ class PersonRepositoryImplTest {
         personMono.subscribe(System.out::println);
     }
 
+    @Test
+    void testFindPersonByIdNotFound() {
+        var peopleFlux = personRepository.findAll();
+
+        final Integer id = 10;
+
+        Mono<Person> personMono = peopleFlux.filter(person -> Objects.equals(person.getId(), id))
+                .single()
+                .doOnError(throwable -> {
+                    System.out.println("Error occurred in flux");
+                    System.out.println(throwable.toString());
+                });
+
+        personMono.subscribe(System.out::println, throwable -> {
+            System.out.println("Error occurred in the mono");
+            System.out.println(throwable.toString());
+        });
+    }
 }
